@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation
 // License: MIT OR Apache-2.0
 
-//! Build script for the `wdk-build` crate
+//! Build script for the `wdk-build` crate.
 //!
-//! This provides a `nightly_toolchain` feature to the `wdk-build` crate, so
-//! that it can conditionally enable unstable features.
+//! This provides a temporary fix for using `assert_matches!` in specific Rust versions in the `wdk-build` crate.
 
 fn main() {
     println!("cargo::rustc-check-cfg=cfg(assert_matches_stabilized)");
