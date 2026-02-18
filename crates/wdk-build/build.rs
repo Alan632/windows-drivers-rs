@@ -3,7 +3,8 @@
 
 //! Build script for the `wdk-build` crate.
 //!
-//! This provides a temporary fix for using `assert_matches!` in specific Rust versions in the `wdk-build` crate.
+//! This provides a temporary fix for using `assert_matches!` in specific Rust
+//! versions in the `wdk-build` crate.
 
 fn main() {
     println!("cargo::rustc-check-cfg=cfg(assert_matches_stabilized)");
