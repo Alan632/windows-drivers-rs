@@ -1546,7 +1546,7 @@ pub fn detect_wdk_build_number() -> Result<u32, ConfigError> {
 
 #[cfg(test)]
 mod tests {
-    #[cfg(nightly_toolchain)]
+    #[cfg(assert_matches_stabilized)]
     use std::assert_matches;
     use std::{collections::HashMap, ffi::OsStr, sync::Mutex};
 
@@ -1823,7 +1823,7 @@ mod tests {
     fn default_config() {
         let config = with_env(&[("CARGO_CFG_TARGET_ARCH", Some("x86_64"))], Config::new);
 
-        #[cfg(nightly_toolchain)]
+        #[cfg(assert_matches_stabilized)]
         assert_matches!(config.driver_config, DriverConfig::Wdm);
         assert_eq!(config.cpu_architecture, CpuArchitecture::Amd64);
     }
@@ -1835,7 +1835,7 @@ mod tests {
             ..Config::default()
         });
 
-        #[cfg(nightly_toolchain)]
+        #[cfg(assert_matches_stabilized)]
         assert_matches!(config.driver_config, DriverConfig::Wdm);
         assert_eq!(config.cpu_architecture, CpuArchitecture::Amd64);
     }
@@ -1847,7 +1847,7 @@ mod tests {
             ..Config::default()
         });
 
-        #[cfg(nightly_toolchain)]
+        #[cfg(assert_matches_stabilized)]
         assert_matches!(
             config.driver_config,
             DriverConfig::Kmdf(KmdfConfig {
@@ -1870,7 +1870,7 @@ mod tests {
             ..Config::default()
         });
 
-        #[cfg(nightly_toolchain)]
+        #[cfg(assert_matches_stabilized)]
         assert_matches!(
             config.driver_config,
             DriverConfig::Kmdf(KmdfConfig {
@@ -1889,7 +1889,7 @@ mod tests {
             ..Config::default()
         });
 
-        #[cfg(nightly_toolchain)]
+        #[cfg(assert_matches_stabilized)]
         assert_matches!(
             config.driver_config,
             DriverConfig::Umdf(UmdfConfig {
@@ -1912,7 +1912,7 @@ mod tests {
             ..Config::default()
         });
 
-        #[cfg(nightly_toolchain)]
+        #[cfg(assert_matches_stabilized)]
         assert_matches!(
             config.driver_config,
             DriverConfig::Umdf(UmdfConfig {
@@ -2081,7 +2081,7 @@ mod tests {
                 Config::validate_and_add_folder_path(&mut include_paths, non_existent_path);
 
             assert!(result.is_err());
-            #[cfg(nightly_toolchain)]
+            #[cfg(assert_matches_stabilized)]
             assert_matches!(
                 result.unwrap_err(),
                 ConfigError::DirectoryNotFound { directory } if directory == non_existent_path.to_string_lossy()
@@ -2099,7 +2099,7 @@ mod tests {
             let result = Config::validate_and_add_folder_path(&mut include_paths, file.path());
 
             assert!(result.is_err());
-            #[cfg(nightly_toolchain)]
+            #[cfg(assert_matches_stabilized)]
             assert_matches!(
                 result.unwrap_err(),
                 ConfigError::DirectoryNotFound { directory } if directory == file.path().to_string_lossy()
