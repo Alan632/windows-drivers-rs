@@ -7,7 +7,7 @@
 //! that it can conditionally enable unstable features.
 
 fn main() {
-    println!("cargo::rustc-check-cfg=cfg(stable_assert_matches)");
+    println!("cargo::rustc-check-cfg=cfg(assert_matches_stabilized)");
     setup_assert_matches_stabilized_cfg();
 }
 
