@@ -11,9 +11,10 @@ fn main() {
     setup_assert_matches_stabilized_cfg();
 }
 
-// Custom attributes cannot be applied to expressions yet, so separate functions are required
-// for `rustversion` conditional compilation: https://github.com/rust-lang/rust/issues/15701
-// TODO: Remove the `setup_assert_matches_stabilized_cfg` feature and related code once the minimum supported Rust version is 1.95.0 or later.
+// Custom attributes cannot be applied to expressions yet, so separate functions
+// are required for `rustversion` conditional compilation: https://github.com/rust-lang/rust/issues/15701
+// TODO: Remove the `setup_assert_matches_stabilized_cfg` feature and related
+// code once the minimum supported Rust version is 1.95.0 or later.
 #[rustversion::since(1.95.0)]
 fn setup_assert_matches_stabilized_cfg() {
     println!("cargo::rustc-cfg=assert_matches_stabilized");
