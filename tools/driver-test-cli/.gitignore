@@ -1,0 +1,23 @@
+# Generated per speckit implement instructions
+# Build artifacts
+/target/
+**/target/
+/debug/
+/release/
+
+# Rust tooling backups
+*.rs.bk
+*.rlib
+*.prof*
+
+# Logs and env files
+*.log
+*.tmp
+.env
+.env.*
+
+# IDE/editor metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

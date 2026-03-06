@@ -1,0 +1,24 @@
+[package]
+name = "driver-test-cli-v2"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+authors = ["windows-drivers-rs contributors"]
+keywords = ["windows", "driver", "hyper-v", "testing", "smoketest"]
+categories = ["development-tools"]
+description = "Rust CLI to orchestrate Windows driver smoketesting on Hyper-V VMs."
+publish = false
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.1"
+tempfile = "3"
