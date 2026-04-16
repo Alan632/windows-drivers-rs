@@ -11,3 +11,9 @@ version = "0.4.1"
 
 [lints]
 workspace = true
+
+[dependencies]
+wdk.workspace = true
+
+[build-dependencies]
+wdk-build.workspace = true
