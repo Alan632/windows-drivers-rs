@@ -8,7 +8,7 @@
 //! parameters for post-mortem analysis.
 //!
 //! **UMDF** drivers print panic information to the system debugger.
-//! Call [`install_panic_hook`] early in `DriverEntry`.
+//! Call `install_panic_hook` early in `DriverEntry`.
 
 #![cfg_attr(
     any(driver_model__driver_type = "WDM", driver_model__driver_type = "KMDF"),
@@ -25,6 +25,7 @@ mod kernel_panic_handler {
     #[cfg(debug_assertions)]
     use wdk::dbg_break;
 
+    #[allow(non_snake_case)]
     unsafe extern "system" {
         fn KeBugCheckEx(
             BugCheckCode: u32,
