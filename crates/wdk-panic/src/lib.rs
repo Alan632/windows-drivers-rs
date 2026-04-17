@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation
 // License: MIT OR Apache-2.0
 
-//! Default Panic Handler for programs built with the WDK (Windows Drivers Kit)
+//! Default Panic Handler for programs built with the WDK (Windows Driver Kit)
 //!
 //! **WDM and KMDF** drivers trigger a bugcheck (`0x52555354` / `RUST`) via
 //! `KeBugCheckEx`. The panic source location is recorded in the bugcheck
