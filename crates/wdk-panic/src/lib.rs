@@ -21,6 +21,7 @@
 ))]
 mod kernel_panic_handler {
     use core::panic::PanicInfo;
+
     #[cfg(debug_assertions)]
     use wdk::dbg_break;
 
@@ -65,8 +66,8 @@ mod kernel_panic_handler {
         // as an opaque value for post-mortem analysis. The FFI signature matches the
         // WDK declaration in `wdm.h`. This call is sound because:
         // 1. The function is always available in kernel mode (linked via ntoskrnl.lib).
-        // 2. The calling convention is correct (`extern "system"` maps to the appropriate
-        //    Windows calling convention for the target architecture).
+        // 2. The calling convention is correct (`extern "system"` maps to the
+        //    appropriate Windows calling convention for the target architecture).
         // 3. The `-> !` return type is upheld — `KeBugCheckEx` never returns.
         unsafe {
             KeBugCheckEx(
