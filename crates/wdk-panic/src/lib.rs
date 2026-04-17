@@ -40,15 +40,15 @@ mod kernel_panic_handler {
 
     #[cold]
     #[panic_handler]
-    fn panic(_info: &PanicInfo) -> ! {
+    fn panic(info: &PanicInfo) -> ! {
         #[cfg(debug_assertions)]
         dbg_break();
-        rust_ke_bugcheck(_info)
+        rust_ke_bugcheck(info)
     }
 
     #[cold]
-    fn rust_ke_bugcheck(_info: &PanicInfo) -> ! {
-        let (panic_filename_ptr, panic_filename_len, panic_line, panic_column) = _info
+    fn rust_ke_bugcheck(info: &PanicInfo) -> ! {
+        let (panic_filename_ptr, panic_filename_len, panic_line, panic_column) = info
             .location()
             .map(|loc| {
                 (
