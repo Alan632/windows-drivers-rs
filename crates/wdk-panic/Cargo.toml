@@ -16,4 +16,6 @@ workspace = true
 wdk.workspace = true
 
 [build-dependencies]
+tracing.workspace = true
+tracing-subscriber = { features = ["env-filter"], workspace = true }
 wdk-build.workspace = true

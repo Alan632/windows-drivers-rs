@@ -8,5 +8,7 @@
 //! conditionally compile code.
 
 fn main() -> Result<(), wdk_build::ConfigError> {
+    tracing_subscriber::fmt().pretty().init();
+
     wdk_build::configure_wdk_library_build()
 }
