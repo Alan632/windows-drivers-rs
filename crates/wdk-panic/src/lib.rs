@@ -94,7 +94,7 @@ mod kernel_panic_handler {
 ///
 /// Note that aborting `WUDFHost.exe` causes the UMDF reflector to restart the
 /// host per the driver's host-failure policy, so `DriverEntry` may run again
-/// until the PnP retry limit is reached.
+/// until the Plug and Play retry limit is reached.
 ///
 /// Calling this replaces the default `std` panic hook.
 ///
