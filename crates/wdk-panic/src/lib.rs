@@ -3,8 +3,11 @@
 
 //! Default Panic Handler for programs built with the WDK (Windows Driver Kit)
 //!
-//! **WDM and KMDF** drivers trigger a bugcheck (`0x52555354` / `RUST`) via
-//! `KeBugCheckEx`. The panic source location is recorded in the bugcheck
+//! **WDM and KMDF** drivers trigger a bugcheck (`0x80504E43`) via
+//! `KeBugCheckEx`. The code is deliberately placed in the high (`0x80000000`+)
+//! range to avoid collision with OS-defined bugcheck identifiers, and encodes
+//! the ASCII bytes `PNC` (panic) in its lower 24 bits for recognizability in
+//! crash dumps. The panic source location is recorded in the bugcheck
 //! parameters for post-mortem analysis.
 //!
 //! **UMDF** drivers print panic information to the system debugger.
@@ -36,7 +39,9 @@ mod kernel_panic_handler {
         ) -> !;
     }
 
-    const BUGCHECK_RUST_CODE: u32 = 0x5255_5354; // RUST
+    // High, uncommon bugcheck code to avoid collision with OS-defined identifiers.
+    // Lower 24 bits spell `PNC` (0x50 'P', 0x4E 'N', 0x43 'C') for recognizability.
+    const BUGCHECK_RUST_CODE: u32 = 0x8050_4E43;
 
     #[cold]
     #[panic_handler]
