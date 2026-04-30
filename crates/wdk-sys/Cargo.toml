@@ -21,6 +21,7 @@ default = []
 
 gpio = []
 hid = []
+vhf = ["wdk-build/vhf"]
 parallel-ports = ["gpio"]
 spb = []
 storage = []
