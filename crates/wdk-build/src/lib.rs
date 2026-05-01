@@ -1158,6 +1158,9 @@ impl Config {
                 // https://github.com/rust-lang/rust/issues/67399
                 println!("cargo::rustc-cdylib-link-arg=/IGNORE:4216");
 
+                // Link against VhfKm.lib (Virtual HID Framework, kernel-mode) when
+                // the "vhf" feature is enabled. Required by drivers that create
+                // virtual HID devices.
                 #[cfg(feature = "vhf")]
                 println!("cargo::rustc-cdylib-link-arg=VhfKm.lib");
             }
@@ -1190,6 +1193,9 @@ impl Config {
                 // might not run` since `rustc` has no support for `/KERNEL`
                 println!("cargo::rustc-cdylib-link-arg=/IGNORE:4257");
 
+                // Link against VhfKm.lib (Virtual HID Framework, kernel-mode) when
+                // the "vhf" feature is enabled. Required by drivers that create
+                // virtual HID devices.
                 #[cfg(feature = "vhf")]
                 println!("cargo::rustc-cdylib-link-arg=VhfKm.lib");
             }
@@ -1207,6 +1213,9 @@ impl Config {
                 // Linker arguments derived from WindowsDriver.UserMode.props in Ni(22H2) WDK
                 println!("cargo::rustc-cdylib-link-arg=/SUBSYSTEM:WINDOWS");
 
+                // Link against VhfUm.lib (Virtual HID Framework, user-mode) when
+                // the "vhf" feature is enabled. Required by drivers that create
+                // virtual HID devices.
                 #[cfg(feature = "vhf")]
                 println!("cargo::rustc-cdylib-link-arg=VhfUm.lib");
             }
