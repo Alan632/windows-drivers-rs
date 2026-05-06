@@ -465,14 +465,16 @@ impl Config {
                     .as_ref()
                     .and_then(|resolve| resolve.nodes.iter().find(|node| node.id == *id))
             })
-            .map(|node| node.features.clone())
-            .unwrap_or_else(|| {
-                tracing::warn!(
-                    "Could not detect wdk-sys features from cargo metadata resolve. \
-                     Feature-dependent libraries will not be linked automatically."
-                );
-                Vec::new()
-            });
+            .map_or_else(
+                || {
+                    tracing::warn!(
+                        "Could not detect wdk-sys features from cargo metadata resolve. \
+                        Feature-dependent libraries will not be linked automatically."
+                    );
+                    Vec::new()
+                },
+                |node| node.features.clone(),
+            );
 
         // Force rebuilds if any of the manifest files change (ex. if wdk metadata
         // section is modified)
