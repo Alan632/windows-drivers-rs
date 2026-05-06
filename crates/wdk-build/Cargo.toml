@@ -17,7 +17,6 @@ ignored = [
 
 [features]
 nightly = []
-vhf = []
 
 [dependencies]
 anyhow.workspace = true

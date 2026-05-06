@@ -45,6 +45,8 @@ pub struct Config {
     cpu_architecture: CpuArchitecture,
     /// Build configuration of driver
     pub driver_config: DriverConfig,
+    /// List of features enabled for `wdk-sys` in resolved dependency graph
+    enabled: Vec<String>,
 }
 
 /// The driver type with its associated configuration parameters
@@ -397,6 +399,7 @@ impl Default for Config {
             ),
             driver_config: DriverConfig::Wdm,
             cpu_architecture: utils::detect_cpu_architecture_in_build_script(),
+            enabled: Vec::new(),
         }
     }
 }
@@ -447,6 +450,30 @@ impl Config {
             .exec()?;
         let wdk_metadata = metadata::Wdk::try_from(&cargo_metadata)?;
 
+        // Find the `wdk-sys` package's PackageId in `cargo_metadata`
+        let wdk_sys_package_id = cargo_metadata
+            .packages
+            .iter()
+            .find(|pkg| pkg.name == "wdk-sys")
+            .map(|pkg| &pkg.id);
+        // Extract the features enabled for `wdk-sys`
+        // Produces an empty Vec if `wdk-sys` is not found in the dependency graph
+        let wdk_sys_enabled_features = wdk_sys_package_id
+            .and_then(|id| {
+                cargo_metadata
+                    .resolve
+                    .as_ref()
+                    .and_then(|resolve| resolve.nodes.iter().find(|node| node.id == *id))
+            })
+            .map(|node| node.features.clone())
+            .unwrap_or_else(|| {
+                tracing::warn!(
+                    "Could not detect wdk-sys features from cargo metadata resolve. \
+                     Feature-dependent libraries will not be linked automatically."
+                );
+                Vec::new()
+            });
+
         // Force rebuilds if any of the manifest files change (ex. if wdk metadata
         // section is modified)
         for manifest_path in metadata::iter_manifest_paths(cargo_metadata)
@@ -462,6 +489,7 @@ impl Config {
 
         Ok(Self {
             driver_config: wdk_metadata.driver_model,
+            enabled: wdk_sys_enabled_features,
             ..Default::default()
         })
     }
@@ -1159,10 +1187,11 @@ impl Config {
                 println!("cargo::rustc-cdylib-link-arg=/IGNORE:4216");
 
                 // Link against VhfKm.lib (Virtual HID Framework, kernel-mode) when
-                // the "vhf" feature is enabled. Required by drivers that create
-                // virtual HID devices.
-                #[cfg(feature = "vhf")]
-                println!("cargo::rustc-cdylib-link-arg=VhfKm.lib");
+                // the "hid" feature is enabled in wdk-sys. Required by drivers that
+                // create virtual HID devices.
+                if self.enabled.contains(&"hid".to_string()) {
+                    println!("cargo::rustc-cdylib-link-arg=VhfKm.lib");
+                }
             }
             DriverConfig::Kmdf(_) => {
                 // Emit KMDF-specific libraries to link to
@@ -1194,10 +1223,11 @@ impl Config {
                 println!("cargo::rustc-cdylib-link-arg=/IGNORE:4257");
 
                 // Link against VhfKm.lib (Virtual HID Framework, kernel-mode) when
-                // the "vhf" feature is enabled. Required by drivers that create
-                // virtual HID devices.
-                #[cfg(feature = "vhf")]
-                println!("cargo::rustc-cdylib-link-arg=VhfKm.lib");
+                // the "hid" feature is enabled in wdk-sys. Required by drivers that
+                // create virtual HID devices.
+                if self.enabled.contains(&"hid".to_string()) {
+                    println!("cargo::rustc-cdylib-link-arg=VhfKm.lib");
+                }
             }
             DriverConfig::Umdf(umdf_config) => {
                 // Emit UMDF-specific libraries to link to
@@ -1214,10 +1244,11 @@ impl Config {
                 println!("cargo::rustc-cdylib-link-arg=/SUBSYSTEM:WINDOWS");
 
                 // Link against VhfUm.lib (Virtual HID Framework, user-mode) when
-                // the "vhf" feature is enabled. Required by drivers that create
-                // virtual HID devices.
-                #[cfg(feature = "vhf")]
-                println!("cargo::rustc-cdylib-link-arg=VhfUm.lib");
+                // the "hid" feature is enabled in wdk-sys. Required by drivers that
+                // create virtual HID devices.
+                if self.enabled.contains(&"hid".to_string()) {
+                    println!("cargo::rustc-cdylib-link-arg=VhfUm.lib");
+                }
             }
         }
 
