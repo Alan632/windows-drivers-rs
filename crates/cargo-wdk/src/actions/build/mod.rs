@@ -79,6 +79,9 @@ pub struct BuildActionParams<'a> {
     pub profile: Option<&'a Profile>,
     pub target_arch: Option<CpuArchitecture>,
     pub sign_mode: SignMode,
+    pub inf2cat_args: Option<Vec<String>>,
+    pub stampinf_args: Option<Vec<String>>,
+    pub infverif_args: Option<Vec<String>>,
     pub is_sample_class: bool,
     pub locked: bool,
     pub target_platform: TargetPlatform,
@@ -93,6 +96,9 @@ pub struct BuildAction<'a> {
     profile: Option<&'a Profile>,
     target_arch: Option<CpuArchitecture>,
     sign_mode: SignMode,
+    inf2cat_args: Option<Vec<String>>,
+    stampinf_args: Option<Vec<String>>,
+    infverif_args: Option<Vec<String>>,
     is_sample_class: bool,
     locked: bool,
     target_platform: TargetPlatform,
@@ -141,6 +147,9 @@ impl<'a> BuildAction<'a> {
             profile: params.profile,
             target_arch: params.target_arch,
             sign_mode: params.sign_mode.clone(),
+            inf2cat_args: params.inf2cat_args.clone(),
+            stampinf_args: params.stampinf_args.clone(),
+            infverif_args: params.infverif_args.clone(),
             is_sample_class: params.is_sample_class,
             locked: params.locked,
             target_platform: params.target_platform,
@@ -310,7 +319,8 @@ impl<'a> BuildAction<'a> {
                 }
             }
             if let Err(e) = wdk_metadata {
-                // Ignore NoWdkConfigurationsDetected but propagate any other error
+                // Ignore NoWdkConfigurationsDetected but propagate any other
+                // error
                 if !matches!(e, TryFromCargoMetadataError::NoWdkConfigurationsDetected) {
                     return Err(BuildActionError::WdkMetadataParse(e));
                 }
@@ -345,7 +355,8 @@ impl<'a> BuildAction<'a> {
             self.build_and_package(working_dir, &wdk_metadata, package)?;
 
             if let Err(e) = wdk_metadata {
-                // Ignore NoWdkConfigurationsDetected but propagate any other error
+                // Ignore NoWdkConfigurationsDetected but propagate any other
+                // error
                 if !matches!(e, TryFromCargoMetadataError::NoWdkConfigurationsDetected) {
                     return Err(BuildActionError::WdkMetadataParse(e));
                 }
@@ -447,6 +458,9 @@ impl<'a> BuildAction<'a> {
                 target_dir: &target_dir,
                 target_arch: &target_arch,
                 sign_mode: self.sign_mode.clone(),
+                inf2cat_args: self.inf2cat_args.clone(),
+                stampinf_args: self.stampinf_args.clone(),
+                infverif_args: self.infverif_args.clone(),
                 sample_class: self.is_sample_class,
                 driver_model,
                 target_platform: self.target_platform,
